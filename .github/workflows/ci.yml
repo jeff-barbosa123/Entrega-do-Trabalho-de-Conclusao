@@ -1,0 +1,62 @@
+name: CI - Testes Automatizados
+
+# ----------------------------------------------------------------------
+# Formas de disparo da pipeline (conforme enunciado do trabalho):
+#   1. push       -> a cada push nas branches indicadas
+#   2. schedule   -> execução agendada (cron)
+#   3. workflow_dispatch -> disparo manual pela aba "Actions" do GitHub
+# ----------------------------------------------------------------------
+on:
+  push:
+    branches:
+      - main
+      - master
+  schedule:
+    # Executa todo dia às 03:00 UTC (00:00 no horário de Recife / BRT)
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+
+# Permissão necessária para o test-reporter publicar o resumo na aba Actions
+permissions:
+  contents: read
+  checks: write
+
+jobs:
+  testes:
+    name: Executar testes e gerar relatório
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Executar testes e gerar relatório
+        run: npm run test:report
+
+      # Faz o UPLOAD do relatório para a pipeline (artefato baixável).
+      # if: always() garante o upload mesmo se algum teste falhar.
+      - name: Upload do relatório (mochawesome + JUnit)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorio-de-testes
+          path: test-report/
+          retention-days: 30
+
+      # Publica o resumo dos testes (JUnit) direto na aba Actions do run.
+      - name: Publicar resumo dos testes
+        if: always()
+        uses: dorny/test-reporter@v1
+        with:
+          name: Resultado dos Testes
+          path: test-report/junit.xml
+          reporter: java-junit

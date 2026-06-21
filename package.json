@@ -1,8 +1,16 @@
 {
+  "name": "trabalho-conclusao-automacao-teste",
+  "version": "1.0.0",
+  "description": "Trabalho de Conclusão - Programação de Automação de Teste. Projeto com testes automatizados (Mocha) e pipeline CI no GitHub Actions.",
   "scripts": {
-    "test": "mocha test/**/*.test.js"
+    "test": "mocha test/**/*.test.js",
+    "test:report": "mocha test/**/*.test.js --reporter mocha-multi-reporters --reporter-options configFile=reporters.config.json"
   },
+  "license": "MIT",
   "devDependencies": {
-    "mocha": "^11.7.6"
+    "mocha": "^11.7.6",
+    "mocha-junit-reporter": "^2.2.1",
+    "mocha-multi-reporters": "^1.5.1",
+    "mochawesome": "^7.1.4"
   }
 }

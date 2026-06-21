@@ -1,0 +1,17 @@
+{
+  "reporterEnabled": "mochawesome, mocha-junit-reporter",
+  "mochawesomeReporterOptions": {
+    "reportDir": "test-report",
+    "reportFilename": "relatorio",
+    "reportTitle": "Relatório de Testes Automatizados",
+    "reportPageTitle": "Relatório de Testes",
+    "html": true,
+    "json": true,
+    "overwrite": true,
+    "charts": true,
+    "consoleReporter": "spec"
+  },
+  "mochaJunitReporterReporterOptions": {
+    "mochaFile": "test-report/junit.xml"
+  }
+}
